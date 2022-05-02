@@ -36,7 +36,7 @@
                     </div>
                 </div>
             @endforeach()
-            {{ $ads->appends(request()->only('ad_id'))->links() }}
+            {{ $ads->appends(request()->only('manufacturerId'))->links() }}
 
         </div>
     </div>

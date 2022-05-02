@@ -81,7 +81,7 @@ class AdController extends Controller
     public function show(Ad $ad)
     {
         $data['ad'] = $ad;
-        $data['comments'] = Comment::where('ad_id', $ad->id)->get();
+        $data['comments'] = Comment::where('ad_id', $ad->id)->orderBy('created_at', 'desc')->paginate(20);;
         $this->increaseViews($ad);
         return view('ads.single', $data);
     }

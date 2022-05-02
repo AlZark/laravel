@@ -6,7 +6,6 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">{{ $ad->title }}</div>
-
                     <div class="card-body">
                         <div class="col-6">
                             <img width="100%" src="{{$ad->image}}">
@@ -23,11 +22,13 @@
                         <div class="details">
                             <h2>Additional info:</h2>
                             <ul>
-                                <li>{{$ad->price}}</li>
-                                <li>{{$ad->year}}</li>
-                                <li>{{$ad->vin}}</li>
-                                <li>{{$ad->color->name}}</li>
-                                <li>{{$ad->type->name}}</li>
+                                <li><strong>Price: </strong> {{$ad->price}} Eur</li>
+                                <li><strong>Manufacturer: </strong>{{$ad->manufacturer->name}}</li>
+                                <li><strong>Model: </strong>{{$ad->model->name}}</li>
+                                <li><strong>Type: </strong>{{$ad->type->name}}</li>
+                                <li><strong>Year: </strong>{{$ad->year}}</li>
+                                <li><strong>Color: </strong>{{$ad->color->name}}</li>
+                                <li><strong>VIN: </strong>{{$ad->vin}}</li>
                             </ul>
                         </div>
                     </div>
@@ -50,14 +51,20 @@
                 <div class="card">
                     <form class="form" method="post">
                         @csrf
-                        <textarea name="content"></textarea>
-                        <input type="hidden" name="ad_id" value="{{ $ad->id }}"/>
-                        <input type="submit" value="Submit" class="btn btn-submit" id="comment">
+                        <textarea name="content" cols="40" rows="3"></textarea>
+                        <input type="hidden" name="ad_id" value="{{ $ad->id }}"/><br>
+                        <input type="submit" value="Submit" class="btn btn-submit btn-primary" id="comment">
                     </form>
+                    <br>
                     <div class="comments" id="comments">
                         @foreach($comments as $comment)
-                            <p>{{$comment->user->name}} says: {{$comment->content}}</p>
+                            <div class="comment">
+                                <p><strong>{{$comment->user->name}} says: </strong> {{$comment->content}}</p>
+                                <p><i>{{$comment->created_at}}</i></p>
+                            </div>
+                            <hr>
                         @endforeach
+                        {{ $comments->links() }}
                     </div>
                 </div>
             </div>

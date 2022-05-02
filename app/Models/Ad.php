@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Models;
 
-class Ad extends Model
+class Ad extends Models
 {
     use HasFactory;
 
@@ -24,9 +24,14 @@ class Ad extends Model
         return $this->hasOne(Type::class, 'id', 'type_id');
     }
 
+    public function model()
+    {
+        return $this->hasOne(Model::class, 'id', 'model_id');
+    }
+
     public function manufacturer()
     {
-        return $this->hasOne(Type::class, 'id', 'manufacturer_id');
+        return $this->hasOne(Manufacturer::class, 'id', 'manufacturer_id');
     }
 
     public function comments(){

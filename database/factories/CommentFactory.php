@@ -17,7 +17,9 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'content' => $this->faker->realTextBetween(),
+            'user_id' => $this->faker->numberBetween(1, 11),
+            'ad_id' => $this->faker->numberBetween(101046, 102045),
         ];
     }
 }
