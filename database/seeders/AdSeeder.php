@@ -14,6 +14,6 @@ class AdSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\Ad::factory(10)->create();
     }
 }

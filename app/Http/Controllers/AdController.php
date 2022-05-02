@@ -24,7 +24,7 @@ class AdController extends Controller
             if($manufacturerId = request('manufacturerId')){
                 $query->where('manufacturer_id', $manufacturerId);
             }
-        })->orderBy('created_at')->get();
+        })->orderBy('created_at')->paginate(42);
         $data['manufacturers'] = Manufacturer::orderBy('name', 'asc')->get();
         return view('ads.list', $data);
     }

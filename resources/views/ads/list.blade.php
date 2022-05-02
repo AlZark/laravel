@@ -36,6 +36,8 @@
                     </div>
                 </div>
             @endforeach()
+            {{ $ads->appends(request()->only('ad_id'))->links() }}
+
         </div>
     </div>
     <script src="{{ asset('js/filters.js') }}"></script>
