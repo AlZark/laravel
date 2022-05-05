@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::CLASS, 'user_id', 'id');
     }
+
+    public function message_sender()
+    {
+        return $this->hasMany(Message::CLASS, 'sender_id', 'id');
+    }
+
+    public function message_receiver()
+    {
+        return $this->hasMany(Message::CLASS, 'receiver_id', 'id');
+    }
 }

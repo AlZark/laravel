@@ -34,7 +34,13 @@ class Ad extends Models
         return $this->hasOne(Manufacturer::class, 'id', 'manufacturer_id');
     }
 
-    public function comments(){
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
+    }
+
+    public function favorite()
+    {
+        return $this->belongsTo(FavoriteAd::class);
     }
 }

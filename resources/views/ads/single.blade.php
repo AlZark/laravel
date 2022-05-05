@@ -15,6 +15,13 @@
                                 {{$ad->content}}
                             </p>
                         </div>
+                        @if(Auth::id() && Auth::id() != $ad->user_id)
+                            <form class="form" method="post" action="{{ route('ad.favorite') }}">
+                                @csrf
+                                <input type="hidden" name="ad_id" value="{{ $ad->id }}"/><br>
+                                <input type="submit" value="Favorite" class="btn btn-favorite btn-primary">
+                            </form>
+                        @endif
                     </div>
                 </div>
                 <div class="row">
@@ -45,26 +52,53 @@
             </div>
         </div>
     </div>
+    @if($ad->user->id != Auth::id())
+        <div class="message-seller">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Contact seller</h2>
+                        </div>
+                        <div class="card-body">
+                            <form class="form" method="post" action="{{ route('message.send') }}">
+                                @csrf
+                                <textarea name="content" cols="40" rows="3"></textarea>
+                                <input type="hidden" name="receiver_id" value="{{ $ad->user->id }}"/><br>
+                                <input type="submit" value="Send" class="btn btn-submit btn-primary">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="comment-container">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <form class="form" method="post">
-                        @csrf
-                        <textarea name="content" cols="40" rows="3"></textarea>
-                        <input type="hidden" name="ad_id" value="{{ $ad->id }}"/><br>
-                        <input type="submit" value="Submit" class="btn btn-submit btn-primary" id="comment">
-                    </form>
-                    <br>
-                    <div class="comments" id="comments">
-                        @foreach($comments as $comment)
-                            <div class="comment">
-                                <p><strong>{{$comment->user->name}} says: </strong> {{$comment->content}}</p>
-                                <p><i>{{$comment->created_at}}</i></p>
-                            </div>
-                            <hr>
-                        @endforeach
-                        {{ $comments->links() }}
+                    <div class="card-header">
+                        <h2>Comments</h2>
+                    </div>
+                    <div class="card-body">
+                        <form class="form" method="post">
+                            @csrf
+                            <textarea name="content" cols="40" rows="3"></textarea>
+                            <input type="hidden" name="ad_id" value="{{ $ad->id }}"/><br>
+                            <input type="submit" value="Submit" class="btn btn-submit btn-comment btn-primary"
+                                   id="comment">
+                        </form>
+                        <br>
+                        <div class="comments" id="comments">
+                            @foreach($comments as $comment)
+                                <div class="comment">
+                                    <p><strong>{{$comment->user->name}} says: </strong> {{$comment->content}}</p>
+                                    <p><i>{{$comment->created_at}}</i></p>
+                                </div>
+                                <hr>
+                            @endforeach
+                            {{ $comments->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,7 +112,7 @@
             }
         });
 
-        $(".btn-submit").click(function(e){
+        $(".btn-comment").click(function (e) {
 
             e.preventDefault();
 
@@ -86,10 +120,10 @@
             let ad_id = $("input[name=ad_id]").val();
 
             $.ajax({
-                type:'POST',
-                url:"{{ route('comment') }}",
-                data:{content:content, ad_id:ad_id},
-                success:function(data){
+                type: 'POST',
+                url: "{{ route('comment') }}",
+                data: {content: content, ad_id: ad_id},
+                success: function (data) {
 
                 }
             });

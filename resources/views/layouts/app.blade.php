@@ -67,6 +67,9 @@
                                     <a class="dropdown-item"  href="{{ route('profile.account') }}">
                                         My account
                                     </a>
+                                    <a class="dropdown-item"  href="{{ route('message.index') }}">
+                                        Messages
+                                    </a>
                                     <a class="dropdown-item"  href="{{ route('ad.create') }}">
                                         Add new Ad
                                     </a>

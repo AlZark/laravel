@@ -6,11 +6,13 @@ use App\Http\Requests\StoreAdRequest;
 use App\Http\Requests\UpdateAdRequest;
 use App\Models\Ad;
 use App\Models\Comment;
+use App\Models\FavoriteAd;
 use App\Models\Model;
 use App\Models\Color;
 use App\Models\Manufacturer;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isEmpty;
@@ -81,7 +83,7 @@ class AdController extends Controller
     public function show(Ad $ad)
     {
         $data['ad'] = $ad;
-        $data['comments'] = Comment::where('ad_id', $ad->id)->orderBy('created_at', 'desc')->paginate(20);;
+        $data['comments'] = Comment::where('ad_id', $ad->id)->orderBy('created_at', 'desc')->paginate(20);
         $this->increaseViews($ad);
         return view('ads.single', $data);
     }
@@ -111,10 +113,18 @@ class AdController extends Controller
      */
     public function update(UpdateAdRequest $request, Ad $ad)
     {
+        $ad_id = $ad->id;
+        $newPrice = $request->post('price');
+
+        if($newPrice != $ad->price) {
+            $favoritedBy = FavoriteAd::select('user_id')->where('ad_id', $ad_id)->get();
+            MessageController::priceChangeNotification($newPrice, $ad->price, $ad->title, $favoritedBy);
+        }
+
         $ad->title = $request->post('title');
         $ad->content = $request->post('content');
         $ad->year = $request->post('year');
-        $ad->price = $request->post('price');
+        $ad->price = $newPrice;
         $ad->vin = $request->post('vin');
         $ad->image = $request->post('image');
         $ad->active = 1;
@@ -124,7 +134,11 @@ class AdController extends Controller
         $ad->color_id = $request->post('color_id');
         $ad->manufacturer_id = $request->post('manufacturer_id');
         $ad->save();
+
+        return to_route('profile.ads');
     }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -143,7 +157,5 @@ class AdController extends Controller
         $ad->views += 1;
         $ad->save();
     }
-
-
 
 }
